@@ -127,9 +127,10 @@
     '    <div class="adp-day" ng-show="mv.trailingDays.length < 7" ng-repeat="day in mv.trailingDays">{{::day}}</div>',
     '  </div>',
     '  <div class="adp-days" id="adp-time"> ',
-    '    <label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}}</span><br/>',
+    '    <label class="timeLabel">Time:</label> <span class="timeValue">{{("0"+inputHour).slice(-2)}} : {{("0"+inputMinute).slice(-2)}} : {{("0"+inputSecond).slice(-2)}}</span><br/>',
     '    <label class="hourLabel">Hour:</label> <input class="hourInput" type="range" min="0" max="23" ng-model="inputHour" ng-change="updateNgModel()" />',
     '    <label class="minutesLabel">Min:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputMinute"  ng-change="updateNgModel()"/> ',
+	'    <label class="secondsLabel">Sec:</label> <input class="minutesInput" type="range" min="0" max="59" ng-model="inputSecond"  ng-change="updateNgModel()"/> ',
     '  </div> ',
     '</div>'].join("\n");
 
@@ -195,6 +196,7 @@
       scope.daysOfWeek = daysOfWeek;
       scope.inputHour;
       scope.inputMinute;
+      scope.inputSecond;
 
       if (scope.dateOnly === true){
         element[0].querySelector('#adp-time').style.display = 'none';
@@ -233,10 +235,12 @@
           var day = scope.day || today.getDate();
           var hour = scope.hour || today.getHours();
           var minute = scope.minute || today.getMinutes();
-          scope.selectedDate = new Date(year, month, day, hour, minute, 0);
+          var second = scope.second || today.getSeconds();
+          scope.selectedDate = new Date(year, month, day, hour, minute, second);
         }
         scope.inputHour   = scope.selectedDate.getHours();
         scope.inputMinute = scope.selectedDate.getMinutes();
+        scope.inputSecond = scope.selectedDate.getSeconds();
 
         // Default to current year and month
         scope.mv = getMonthView(scope.selectedDate.getFullYear(), scope.selectedDate.getMonth());
@@ -265,7 +269,7 @@
       scope.updateNgModel = function(day) {
         day = day ? day : scope.selectedDate.getDate();
         scope.selectedDate = new Date(
-          scope.mv.year, scope.mv.month, day, scope.inputHour, scope.inputMinute, 0
+          scope.mv.year, scope.mv.month, day, scope.inputHour, scope.inputMinute, scope.inputSecond
         );
         scope.selectedDay = scope.selectedDate.getDate();
         if (attrs.ngModel) {
@@ -294,6 +298,7 @@
         day: '=',
         hour: '=',
         minute: '=',
+        second: '=',
         dateOnly: '=',
         closeOnSelect: '='
       },
@@ -332,6 +337,7 @@
             day: attrs.day,
             hour: attrs.hour,
             minute: attrs.minute,
+            second: attrs.second,
             dateOnly: attrs.dateOnly,
             futureOnly: attrs.futureOnly,
             closeOnSelect: attrs.closeOnSelect
